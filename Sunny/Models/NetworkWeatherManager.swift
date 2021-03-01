@@ -13,19 +13,21 @@ struct NetworkWeatherManager {
         //После создания задачи вы должны запустить ее, вызвав ее метод resume ().
         session.dataTask(with: url) { (data, response, error) in
             if let data = data {
-                parseJSON(withData: data)
+                let currentWeather = parseJSON(withData: data)
             }
         }.resume()
     }
     
-    func parseJSON(withData data: Data) -> Void {
+    func parseJSON(withData data: Data) -> CurrentWeather? {
         let decoder = JSONDecoder()
         
         do {
             let currentWeatherData = try decoder.decode(CurrentWeatherData.self, from: data)
-            print(currentWeatherData.main.temp)
+            guard let currentWeather = CurrentWeather(currentWeatherData: currentWeatherData) else { return nil }
+            return currentWeather
         } catch let error as NSError {
             print(error.localizedDescription)
         }
+        return nil
     }
 }
