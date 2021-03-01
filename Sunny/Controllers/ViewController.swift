@@ -21,7 +21,10 @@ class ViewController: UIViewController {
 /* Delegate
         networkWeatherManager.delegate = self
 */
-        networkWeatherManager.fetchCurrentWeather(forCiry: "Minsk")
+        networkWeatherManager.onCompletion = { currentWeather in
+            print(currentWeather.cityName)
+        }
+       // networkWeatherManager.fetchCurrentWeather(forCiry: "Minsk")
     }
 }
 
