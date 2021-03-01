@@ -1,6 +1,18 @@
 import Foundation
 
-struct NetworkWeatherManager {
+/* Delegate
+protocol NetworkWeatherManagerDelegate: class {
+    //_: NetworkWeatherManager - из документации - пространство имен (могут совпадать названия методов)
+    //Что бы не было пересечения в названиях методов, добавлем сам делегатор
+    func updateInterface(_: NetworkWeatherManager, with currentWeather: CurrentWeather) -> Void
+}
+*/
+
+class NetworkWeatherManager {
+/* Delegate
+    weak var delegate: NetworkWeatherManagerDelegate?
+*/
+ 
     func fetchCurrentWeather(forCiry city: String) -> Void {
         //Без s будет ошибка, но можно добавить адрес в исключение
         let urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&appid=\(apiKey)"
@@ -13,7 +25,13 @@ struct NetworkWeatherManager {
         //После создания задачи вы должны запустить ее, вызвав ее метод resume ().
         session.dataTask(with: url) { (data, response, error) in
             if let data = data {
-                let currentWeather = parseJSON(withData: data)
+                if let currentWeather = self.parseJSON(withData: data) {
+                    print(currentWeather.cityName)
+/* Delegate
+                    //self.delegate так как работаем внутри closuer
+                    self.delegate?.updateInterface(self, with: currentWeather)
+*/
+                }
             }
         }.resume()
     }
