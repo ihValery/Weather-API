@@ -1,12 +1,13 @@
 import UIKit
 
 extension ViewController {
-    func presentSearchAlertController(withTitle title: String?, message: String?, style: UIAlertController.Style) {
+    func presentSearchAlertController(withTitle title: String?, message: String?,
+                                      style: UIAlertController.Style, completionHandler: @escaping (String) -> Void) {
         //Создаем наш алерт и передаем все входные параметры из нашей функции
         let ac = UIAlertController(title: title, message: message, preferredStyle: style)
         //добавляем текстовое поле в алерт контроллер
         ac.addTextField { tf in
-            let cities = ["Minsk", "Sidney", "New York", "Stambul", "Rim"]
+            let cities = ["Minsk", "Sidney", "New York", "Stambul"]
             tf.placeholder = cities.randomElement()
         }
         //Создаем кнопку Search
@@ -14,7 +15,12 @@ extension ViewController {
             let textField = ac.textFields?.first
             guard let cityName = textField?.text else { return }
             if cityName != "" {
-                print("search info for the \(cityName)")
+                //Простой вариант использования, но мы учимся через closure
+                //self.networkWeatherManager.fetchCurrentWeather(forCiry: cityName)
+                
+                //Если cityName состоит из нескольких элементов разделенных " ", (через массив) соединяет их заменив на %20
+                let city = cityName.split(separator: " ").joined(separator: "%20")
+                completionHandler(city)
             }
         }
         //Создаем Cancel
