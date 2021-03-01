@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -18,8 +17,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="twilight" translatesAutoresizingMaskIntoConstraints="NO" id="voP-iF-iac">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="voP-iF-iac">
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                                <color key="tintColor" name="infoColor"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Zjh-XY-7pK">
                                 <rect key="frame" x="292" y="759" width="81.666666666666686" height="31"/>
@@ -125,9 +125,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="background" width="785" height="1396"/>
         <image name="cloud.rain.fill" catalog="system" width="128" height="125"/>
         <image name="magnifyingglass.circle.fill" catalog="system" width="128" height="121"/>
-        <image name="twilight" width="785" height="1396"/>
         <namedColor name="infoColor">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
