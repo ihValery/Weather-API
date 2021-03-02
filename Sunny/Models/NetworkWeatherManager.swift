@@ -13,17 +13,22 @@ class NetworkWeatherManager {
 /* Delegate
     weak var delegate: NetworkWeatherManagerDelegate?
 */
-    var onCompletion: ((CurrentWeather) -> Void)?
-    
-    //Для closure добавляем completionHandler: (value) ->Void
-    func fetchCurrentWeather(forCiry city: String) -> Void {
-        //Без s будет ошибка, но можно добавить адрес в исключение
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=\(city)&appid=\(apiKey)"
-        perfomeRequest(withUR: urlString)
+    //Для более универсального метода
+    enum RequestType {
+        case cityName(city: String)
+        case coordinate(latitude: CLLocationDegrees, longitude: CLLocationDegrees)
     }
     
-    func fetchCurrentWeather(forLatitude latitude: CLLocationDegrees, longitude: CLLocationDegrees) -> Void {
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?units=metric&lat=\(latitude)&lon=\(longitude)&appid=\(apiKey)"
+    var onCompletion: ((CurrentWeather) -> Void)?
+    
+    func fetchCurrentWeather(forRequestType requestType: RequestType) -> Void {
+        var urlString = ""
+        switch requestType {
+            case .cityName(let city):
+                urlString = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=\(city)&appid=\(apiKey)"
+            case .coordinate(let latitude, let longitude):
+                urlString = "https://api.openweathermap.org/data/2.5/weather?units=metric&lat=\(latitude)&lon=\(longitude)&appid=\(apiKey)"
+        }
         perfomeRequest(withUR: urlString)
     }
     

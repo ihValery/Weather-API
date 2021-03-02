@@ -24,7 +24,7 @@ class ViewController: UIViewController {
     @IBAction func searchPressed(_ sender: UIButton) {
         //[weak self] - на будущее если разрастется app и будет несколько экранов
         self.presentSearchAlertController(withTitle: "Enter city name", message: nil, style: .alert) { [unowned self] city in
-            self.networkWeatherManager.fetchCurrentWeather(forCiry: city)
+            self.networkWeatherManager.fetchCurrentWeather(forRequestType: .cityName(city: city))
         }
     }
     
@@ -74,7 +74,7 @@ extension ViewController: CLLocationManagerDelegate {
         guard let location = locations.last else { return }
         let latitude = location.coordinate.latitude
         let longitude = location.coordinate.longitude
-        networkWeatherManager.fetchCurrentWeather(forLatitude: latitude, longitude: longitude)
+        networkWeatherManager.fetchCurrentWeather(forRequestType: .coordinate(latitude: latitude, longitude: longitude))
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
