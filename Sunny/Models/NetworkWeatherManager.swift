@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 
 /* Delegate
 protocol NetworkWeatherManagerDelegate: class {
@@ -17,7 +18,16 @@ class NetworkWeatherManager {
     //Для closure добавляем completionHandler: (value) ->Void
     func fetchCurrentWeather(forCiry city: String) -> Void {
         //Без s будет ошибка, но можно добавить адрес в исключение
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&units=metric&appid=\(apiKey)"
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=\(city)&appid=\(apiKey)"
+        perfomeRequest(withUR: urlString)
+    }
+    
+    func fetchCurrentWeather(forLatitude latitude: CLLocationDegrees, longitude: CLLocationDegrees) -> Void {
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?units=metric&lat=\(latitude)&lon=\(longitude)&appid=\(apiKey)"
+        perfomeRequest(withUR: urlString)
+    }
+    
+    fileprivate func perfomeRequest(withUR urlString: String) -> Void {
         guard let url = URL(string: urlString) else { return }
         
         //Создаем сейссию (95% используется .default)
@@ -39,7 +49,7 @@ class NetworkWeatherManager {
         }.resume()
     }
     
-    func parseJSON(withData data: Data) -> CurrentWeather? {
+    fileprivate func parseJSON(withData data: Data) -> CurrentWeather? {
         let decoder = JSONDecoder()
         
         do {
