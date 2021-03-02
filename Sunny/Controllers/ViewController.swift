@@ -1,4 +1,5 @@
 import UIKit
+import CoreLocation
 
 class ViewController: UIViewController {
     
@@ -9,10 +10,21 @@ class ViewController: UIViewController {
     
     var networkWeatherManager = NetworkWeatherManager()
     
+    //lazy - вдруг пользователь не разрешит использовать гео данные, так зачем держать в памяти менеджера
+    lazy var locationManager: CLLocationManager = {
+        let lm = CLLocationManager()
+        lm.delegate = self
+        //Точность данных о местоположении, которые ваше приложение хочет получать. Достаточно и километра
+        lm.desiredAccuracy = kCLLocationAccuracyKilometer
+        //запрашиваем у пользователя доступ к его гео позиции (info.plist обязателен)
+        lm.requestWhenInUseAuthorization()
+        return lm
+    }()
+    
     @IBAction func searchPressed(_ sender: UIButton) {
         //[weak self] - на будущее если разрастется app и будет несколько экранов
         self.presentSearchAlertController(withTitle: "Enter city name", message: nil, style: .alert) { [unowned self] city in
-            self.networkWeatherManager.fetchCurrentWeather(forCiry: city)
+            self.networkWeatherManager.fetchCurrentWeather(forRequestType: .cityName(city: city))
         }
     }
     
@@ -26,7 +38,10 @@ class ViewController: UIViewController {
             guard let self = self else { return }
             self.updateInterfaceWith(weather: currentWeather)
         }
-        networkWeatherManager.fetchCurrentWeather(forCiry: "Minsk")
+        //Если настройка не выключенна на самом телефоне, то запрашивает гео
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.requestLocation()
+        }
     }
     
     func updateInterfaceWith(weather: CurrentWeather) -> Void {
@@ -50,3 +65,19 @@ extension ViewController: NetworkWeatherManagerDelegate {
     }
 }
 */
+
+//MARK: - CLLocationManagerDelegate
+
+extension ViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        //[CLLocation] - массив поэтому берем последнее значение из него
+        guard let location = locations.last else { return }
+        let latitude = location.coordinate.latitude
+        let longitude = location.coordinate.longitude
+        networkWeatherManager.fetchCurrentWeather(forRequestType: .coordinate(latitude: latitude, longitude: longitude))
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error.localizedDescription)
+    }
+}

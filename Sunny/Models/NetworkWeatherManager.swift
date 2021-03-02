@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 
 /* Delegate
 protocol NetworkWeatherManagerDelegate: class {
@@ -12,12 +13,26 @@ class NetworkWeatherManager {
 /* Delegate
     weak var delegate: NetworkWeatherManagerDelegate?
 */
+    //Для более универсального метода
+    enum RequestType {
+        case cityName(city: String)
+        case coordinate(latitude: CLLocationDegrees, longitude: CLLocationDegrees)
+    }
+    
     var onCompletion: ((CurrentWeather) -> Void)?
     
-    //Для closure добавляем completionHandler: (value) ->Void
-    func fetchCurrentWeather(forCiry city: String) -> Void {
-        //Без s будет ошибка, но можно добавить адрес в исключение
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&units=metric&appid=\(apiKey)"
+    func fetchCurrentWeather(forRequestType requestType: RequestType) -> Void {
+        var urlString = ""
+        switch requestType {
+            case .cityName(let city):
+                urlString = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=\(city)&appid=\(apiKey)"
+            case .coordinate(let latitude, let longitude):
+                urlString = "https://api.openweathermap.org/data/2.5/weather?units=metric&lat=\(latitude)&lon=\(longitude)&appid=\(apiKey)"
+        }
+        perfomeRequest(withUR: urlString)
+    }
+    
+    fileprivate func perfomeRequest(withUR urlString: String) -> Void {
         guard let url = URL(string: urlString) else { return }
         
         //Создаем сейссию (95% используется .default)
@@ -39,7 +54,7 @@ class NetworkWeatherManager {
         }.resume()
     }
     
-    func parseJSON(withData data: Data) -> CurrentWeather? {
+    fileprivate func parseJSON(withData data: Data) -> CurrentWeather? {
         let decoder = JSONDecoder()
         
         do {
