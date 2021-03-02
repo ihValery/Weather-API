@@ -17,7 +17,7 @@ class NetworkWeatherManager {
     //Для closure добавляем completionHandler: (value) ->Void
     func fetchCurrentWeather(forCiry city: String) -> Void {
         //Без s будет ошибка, но можно добавить адрес в исключение
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&appid=\(apiKey)"
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&units=metric&appid=\(apiKey)"
         guard let url = URL(string: urlString) else { return }
         
         //Создаем сейссию (95% используется .default)
@@ -28,6 +28,7 @@ class NetworkWeatherManager {
         session.dataTask(with: url) { (data, response, error) in
             if let data = data {
                 if let currentWeather = self.parseJSON(withData: data) {
+                    //тут получаем объект currentWeather
                     self.onCompletion?(currentWeather)
 /* Delegate
                     //self.delegate так как работаем внутри closuer
