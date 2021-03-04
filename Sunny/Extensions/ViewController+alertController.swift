@@ -7,7 +7,7 @@ extension ViewController {
         let ac = UIAlertController(title: title, message: message, preferredStyle: style)
         //добавляем текстовое поле в алерт контроллер
         ac.addTextField { tf in
-            let cities = ["Minsk", "Sidney", "New York", "Stambul"]
+            let cities = ["Minsk", "Sydney", "New York", "Stambul"]
             tf.placeholder = cities.randomElement()
         }
         //Создаем кнопку Search
