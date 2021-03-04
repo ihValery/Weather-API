@@ -14,16 +14,20 @@ struct CurrentWeather {
     }
     
     let conditionCode: Int
-    var systemIconNameString: String {
+    var iconNameString: String {
         switch conditionCode {
-            case 200...232: return "cloud.bolt.rain.fill"
-            case 300...321: return "cloud.drizzle.fill"
-            case 500...531: return "cloud.rain.fill"
-            case 600...622: return "cloud.snow.fill"
-            case 701...781: return "smoke.fill"
-            case 800:       return "sun.max.fill"
-            case 801...804: return "cloud.sun.fill"
-            default: return "nosign"
+            case 200...232: return "Thunderstorm"
+            case 300...321: return "Drizzle"
+            case 500...504: return "Rain"
+            case 511:       return "Rain2"
+            case 520...531: return "Drizzle"
+            case 600...622: return "Snow"
+            case 701...781: return "Atmosphere"
+            case 800:       return "Sun"
+            case 801:       return "Clouds1"
+            case 802:       return "Clouds2"
+            case 803...804: return "Clouds3"
+            default: return "Search"
         }
     }
     
